@@ -1,0 +1,19 @@
+{
+  "name": "headache-class",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "scripts": {
+    "start": "bun run index.ts"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@google-cloud/local-auth": "^3.0.1",
+    "@googleapis/forms": "^2.0.7",
+    "googleapis": "^140.0.0"
+  }
+}
