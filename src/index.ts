@@ -1,8 +1,8 @@
-import { getAuth } from './src/auth';
-import { getFormDefinition } from './src/form-definition';
-import { getFormResponses } from './src/form-responses';
-import { generatePdfs } from './src/pdf-generator';
-import { writeFile } from './src/write-file';
+import { getAuth } from './auth';
+import { getFormDefinition } from './form-definition';
+import { getFormResponses } from './form-responses';
+import { generatePdfs } from './pdf-generator';
+import { writeFile } from './write-file';
 import path from 'path';
 
 // global.auth = await getAuth();

@@ -1,12 +1,14 @@
 import { PDFDocument } from 'pdf-lib';
 import fs from 'fs';
 import path from 'path';
-import QuickChart from 'quickchart-js';
+import { ChartJSNodeCanvas } from 'chartjs-node-canvas';
+
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
 // Define paths
 const dataDir = path.resolve(__dirname, '../output/data');
 const pdfOutputDir = path.resolve(__dirname, '../output/pdfs');
@@ -17,13 +19,13 @@ if (!fs.existsSync(pdfOutputDir)) {
 }
 
 // Function to read JSON file
-const readJSONFile = (filePath: string) => {
+const readJSONFile = (filePath) => {
   const data = fs.readFileSync(filePath, 'utf-8');
   return JSON.parse(data);
 };
 
-// Function to generate chart URL
-const generateChartUrl = (data: { time: number; level: number; remedies: string[]; medications: string[]; }[], labels: string[]) => {
+// Function to generate chart image
+const generateChartImage = async (data, labels) => {
   const chartData = data.map(d => d.level);
   const annotations = data.flatMap((d, i) => [
     ...d.remedies.map(r => ({
@@ -58,8 +60,11 @@ const generateChartUrl = (data: { time: number; level: number; remedies: string[
     }))
   ]);
 
-  const chart = new QuickChart();
-  chart.setConfig({
+  const width = 600;
+  const height = 300;
+  const chartJSNodeCanvas = new ChartJSNodeCanvas({ width, height });
+
+  const configuration = {
     type: 'line',
     data: {
       labels,
@@ -77,45 +82,45 @@ const generateChartUrl = (data: { time: number; level: number; remedies: string[
         }
       },
       scales: {
-        xAxes: [{
-          scaleLabel: {
+        x: {
+          title: {
             display: true,
-            labelString: 'Time of Day'
+            text: 'Time of Day'
           }
-        }],
-        yAxes: [{
-          scaleLabel: {
+        },
+        y: {
+          title: {
             display: true,
-            labelString: 'Pain Level'
+            text: 'Pain Level'
           },
-          ticks: {
-            min: 0,
-            max: 10
-          }
-        }]
+          min: 0,
+          max: 10
+        }
       }
     }
-  });
-  chart.setWidth(600).setHeight(300); // Increased height for better readability
-  return chart.getUrl();
+  };
+
+  const imageBuffer = await chartJSNodeCanvas.renderToBuffer(configuration);
+  return imageBuffer;
 };
 
 // Function to create a PDF for each day
-const createPDF = async (dayData: any) => {
+const createPDF = async (dayData) => {
   const pdfDoc = await PDFDocument.create();
   const { date, pain, factors } = dayData;
 
   // Add a page to the PDF
   const page = pdfDoc.addPage([600, 800]);
 
-  // Generate chart URL
+  // Generate chart image
   const labels = ['Morning', 'Noon', 'Afternoon', 'Evening', 'Night'];
-  const chartUrl = generateChartUrl(pain, labels);
-  const chartImageBytes = await fetch(chartUrl).then(res => res.arrayBuffer());
-  const chartImage = await pdfDoc.embedPng(chartImageBytes);
+  const chartImage = await generateChartImage(pain, labels);
+
+  // Embed chart image in PDF
+  const chartImagePdf = await pdfDoc.embedPng(chartImage);
 
   // Draw chart
-  page.drawImage(chartImage, {
+  page.drawImage(chartImagePdf, {
     x: 50,
     y: 400, // Adjusted y-position to accommodate increased height
     width: 500,
@@ -143,8 +148,8 @@ async function generatePdfs() {
   const formDefinition = readJSONFile(path.join(dataDir, 'form-definition.json'));
   const formResponses = readJSONFile(path.join(dataDir, 'form-responses.json'));
 
-  const questionMap: { [key: string]: string } = {};
-  formDefinition.items.forEach((item: any) => {
+  const questionMap = {};
+  formDefinition.items.forEach((item) => {
     if (item.questionItem) {
       const questionId = item.questionItem.question.questionId;
       const title = item.title;
@@ -152,7 +157,7 @@ async function generatePdfs() {
     }
   });
 
-  const daysOfData = formResponses.responses?.reduce((acc: any, curr: any) => {
+  const daysOfData = formResponses.responses?.reduce((acc, curr) => {
     const symptomStart = curr.answers['065980fd']?.textAnswers.answers[0].value;
     const date = symptomStart ? symptomStart.split(' ')[0] : new Date(curr.lastSubmittedTime).toISOString().split('T')[0];
     if (!acc[date]) {
