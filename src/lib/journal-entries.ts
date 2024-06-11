@@ -10,7 +10,12 @@ dayjs.extend(utc);
 
 export type JournalEntry = {
   date: Date;
-  painData: { time: Date; level: number; medications: string[]; remedies: string[] }[];
+  painData: {
+    time: Date;
+    level: number;
+    medications: string[];
+    remedies: string[];
+  }[];
   notes: {
     time: Date;
     note: string;
@@ -46,7 +51,8 @@ export async function getJournalEntries({
   });
   formResponses.responses?.forEach((response) => {
     if (!response.answers) return;
-    const symptomStart = response.answers['065980fd']?.textAnswers?.answers?.[0].value;
+    const symptomStart =
+      response.answers['065980fd']?.textAnswers?.answers?.[0].value;
     const lastSubmittedTime = response.lastSubmittedTime;
     if (!symptomStart && !lastSubmittedTime) return;
     const dateTime = symptomStart
@@ -63,21 +69,29 @@ export async function getJournalEntries({
     }
 
     const time = dayjs(dateTime).toDate();
-    const painLevel = response.answers['645e49c5']?.textAnswers?.answers?.[0].value
-      ? parseInt(response.answers['645e49c5']?.textAnswers?.answers?.[0].value as string)
+    const painLevel = response.answers['645e49c5']?.textAnswers?.answers?.[0]
+      .value
+      ? parseInt(
+          response.answers['645e49c5']?.textAnswers?.answers?.[0]
+            .value as string
+        )
       : 0;
     const remedies =
       response.answers['6b3c1ac6']?.textAnswers?.answers &&
       response.answers['6b3c1ac6']?.textAnswers?.answers?.length > 0
         ? (response.answers['6b3c1ac6']?.textAnswers?.answers
-            .filter((answer) => answer.value !== null && answer.value !== undefined)
+            .filter(
+              (answer) => answer.value !== null && answer.value !== undefined
+            )
             .map((answer) => answer.value) as string[]) ?? []
         : [];
     const medications =
       response.answers['7dafa2ba']?.textAnswers?.answers &&
       response.answers['7dafa2ba']?.textAnswers?.answers?.length > 0
         ? (response.answers['7dafa2ba']?.textAnswers?.answers
-            .filter((answer) => answer.value !== null && answer.value !== undefined)
+            .filter(
+              (answer) => answer.value !== null && answer.value !== undefined
+            )
             .map((answer) => answer.value) as string[]) ?? []
         : [];
 
@@ -85,20 +99,37 @@ export async function getJournalEntries({
     //   ? [response.answers['7dafa2ba']?.textAnswers.answers[0].value]
     //   : [];
 
-    journalEntries[date].painData.push({ time, level: painLevel, remedies, medications });
+    journalEntries[date].painData.push({
+      time,
+      level: painLevel,
+      remedies,
+      medications,
+    });
 
     // Update factors with the latest response
-    ['20018bcf', '1f14e108', '1f166a67', '57e852e0', '2094789c', '3c9831e5', '2cecca34'].forEach(
-      (key) => {
-        if (response.answers?.[key]) {
-          const factorTitle = questionMap[key];
-          journalEntries[date].riskFactors[factorTitle.toLowerCase()] = response.answers[key]
-            .textAnswers?.answers?.[0].value as 'low' | 'med' | 'high';
-        }
+    [
+      '20018bcf',
+      '1f14e108',
+      '1f166a67',
+      '57e852e0',
+      '2094789c',
+      '3c9831e5',
+      '2cecca34',
+    ].forEach((key) => {
+      if (response.answers?.[key]) {
+        const factorTitle = questionMap[key];
+        journalEntries[date].riskFactors[factorTitle.toLowerCase()] = response
+          .answers[key].textAnswers?.answers?.[0].value as
+          | 'low'
+          | 'med'
+          | 'high';
       }
-    );
-    if(response.answers['2af75715']?.textAnswers?.answers?.[0].value) {
-      journalEntries[date].notes.push({ time, note: response.answers['2af75715']?.textAnswers?.answers?.[0].value });
+    });
+    if (response.answers['2af75715']?.textAnswers?.answers?.[0].value) {
+      journalEntries[date].notes.push({
+        time,
+        note: response.answers['2af75715']?.textAnswers?.answers?.[0].value,
+      });
     }
   });
 
@@ -129,7 +160,10 @@ export async function getJournalEntries({
 
     return Object.fromEntries(
       Object.entries(sortedJournalEntries).filter(([date]) => {
-        return dayjs(date).format('YYYY-MM-DD') >= start && dayjs(date).format('YYYY-MM-DD') <= end;
+        return (
+          dayjs(date).format('YYYY-MM-DD') >= start &&
+          dayjs(date).format('YYYY-MM-DD') <= end
+        );
       })
     );
   } else {

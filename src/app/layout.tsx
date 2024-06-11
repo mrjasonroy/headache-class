@@ -16,14 +16,11 @@ export default function Layout({
   header: React.ReactNode;
 }>) {
   return (
-    <html
-      lang='en'
-      className='bg-white'
-    >
+    <html lang="en" className="bg-white">
       <body className={inter.className}>
-        <div className='bg-white min-h-svh'>
+        <div className="min-h-svh bg-white">
           {header}
-          <div className='max-w-5xl mx-auto px-4'>{children}</div>
+          <div className="mx-auto max-w-5xl px-4">{children}</div>
         </div>
       </body>
     </html>

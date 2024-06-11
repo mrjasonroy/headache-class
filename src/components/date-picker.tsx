@@ -1,5 +1,9 @@
 'use client';
-import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { CalendarDaysIcon } from 'lucide-react';
@@ -36,19 +40,16 @@ export function DatePicker(props: {
       <PopoverTrigger asChild>
         <Button
           variant={props.variant || 'default'}
-          className='flex items-center gap-2'
+          className="flex items-center gap-2"
         >
-          <CalendarDaysIcon className='w-4 h-4' />
+          <CalendarDaysIcon className="h-4 w-4" />
           <span>Select Date(s)</span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent
-        className='w-auto p-0'
-        align='end'
-      >
-        <div className='flex items-center flex-col justify-center p-4 gap-2'>
+      <PopoverContent className="w-auto p-0" align="end">
+        <div className="flex flex-col items-center justify-center gap-2 p-4">
           <Calendar
-            mode='range'
+            mode="range"
             initialFocus
             selected={selectedDates}
             onSelect={(dates: DateRange | undefined) => {
@@ -61,15 +62,15 @@ export function DatePicker(props: {
             }}
           />
           <div
-            className={cn('w-full text-red-600 hidden', {
+            className={cn('hidden w-full text-red-600', {
               block: !isValidDateRange,
             })}
           >
             Invalid Date Range
           </div>
-          <div className='flex gap-2 justify-end w-full'>
+          <div className="flex w-full justify-end gap-2">
             <Button
-              variant='secondary'
+              variant="secondary"
               onClick={() => {
                 setSelectedDates(undefined);
                 setIsValidDateRange(true);
@@ -78,7 +79,7 @@ export function DatePicker(props: {
               Clear
             </Button>
             <Button
-              variant='default'
+              variant="default"
               onClick={() => {
                 if (selectedDates?.from) {
                   startDateTransition(() => {
@@ -95,7 +96,10 @@ export function DatePicker(props: {
                 }
               }}
             >
-              Confirm <IconSpinner className={cn('w-4 h-4 hidden', { block: isLoading })} />
+              Confirm{' '}
+              <IconSpinner
+                className={cn('hidden h-4 w-4', { block: isLoading })}
+              />
             </Button>
           </div>
         </div>

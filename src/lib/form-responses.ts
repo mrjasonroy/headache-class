@@ -6,11 +6,10 @@ import { OAuth2Client } from 'google-auth-library';
 const formID = process.env.FORM_ID;
 async function getFormResponses({
   auth,
-  from
+  from,
 }: {
-  auth: OAuth2Client
+  auth: OAuth2Client;
   from?: Date;
-
 }): Promise<forms_v1.Schema$ListFormResponsesResponse> {
   if (!formID) throw new Error('FORM_ID is not set');
   const googleForms = forms({

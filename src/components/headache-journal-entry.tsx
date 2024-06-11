@@ -25,52 +25,51 @@ export function HeadacheJournalEntry(props: JournalEntry) {
     remedies: data.remedies,
   }));
   return (
-    <div className='break-after-page'>
-      <Card>
+    <div className="w-full break-after-page">
+      <Card className="w-full">
         <CardHeader>
-          <div className='flex justify-between mb-4'>
+          <div className="mb-4 flex justify-between">
             <div>
               <label
-                htmlFor='day'
-                className='block text-sm font-medium text-gray-700'
+                htmlFor="day"
+                className="block text-sm font-medium text-gray-700"
               >
                 Day:
               </label>
-              <div className='mt-1 block w-full rounded-md border-gray-300 shadow-sm px-3 py-2 bg-gray-100'>
+              <div className="mt-1 block w-full rounded-md border-gray-300 bg-gray-100 px-3 py-2 shadow-sm">
                 {dayjs.utc(props.date).format('dddd')}
               </div>
             </div>
             <div>
               <label
-                htmlFor='date'
-                className='block text-sm font-medium text-gray-700'
+                htmlFor="date"
+                className="block text-sm font-medium text-gray-700"
               >
                 Date:
               </label>
-              <div className='mt-1 block w-full rounded-md border-gray-300 shadow-sm px-3 py-2 bg-gray-100'>
+              <div className="mt-1 block w-full rounded-md border-gray-300 bg-gray-100 px-3 py-2 shadow-sm">
                 {dayjs.utc(props.date).format('MMMM D, YYYY')}
               </div>
             </div>
           </div>
         </CardHeader>
         <CardContent>
-          <div className='border-t py-4'>
-            <div className='mb-4'>
-              <h3 className='text-lg font-semibold text-gray-900'>Pain Level</h3>
+          <div className="border-t py-4">
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">
+                Pain Level
+              </h3>
             </div>
-            <LineChart
-              className='w-full h-[300px]'
-              data={lineChartData}
-            />
+            <LineChart className="h-[300px] w-full" data={lineChartData} />
           </div>
-          <div className='my-4'>
+          <div className="my-4">
             <label
-              htmlFor='actions-table'
-              className='block text-sm font-medium text-gray-700'
+              htmlFor="actions-table"
+              className="block text-sm font-medium text-gray-700"
             >
               Actions Taken:
             </label>
-            <div className='mt-1 w-full overflow-auto'>
+            <div className="mt-1 w-full overflow-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -81,10 +80,15 @@ export function HeadacheJournalEntry(props: JournalEntry) {
                 </TableHeader>
                 <TableBody>
                   {props.painData
-                    .filter((data) => data.medications.length > 0 || data.remedies.length > 0)
+                    .filter(
+                      (data) =>
+                        data.medications.length > 0 || data.remedies.length > 0
+                    )
                     .map((data) => (
                       <TableRow key={data.time.toISOString()}>
-                        <TableCell>{dayjs(data.time).format('hh:mm A')}</TableCell>
+                        <TableCell>
+                          {dayjs(data.time).format('hh:mm A')}
+                        </TableCell>
                         <TableCell>{data.medications.join(', ')}</TableCell>
                         <TableCell>{data.remedies.join(', ')}</TableCell>
                       </TableRow>
@@ -93,23 +97,22 @@ export function HeadacheJournalEntry(props: JournalEntry) {
               </Table>
             </div>
           </div>
-          <Separator className='my-4' />
-          <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
+          <Separator className="my-4" />
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
               <label
-                htmlFor='notes'
-                className='block text-sm font-medium text-gray-700'
+                htmlFor="notes"
+                className="block text-sm font-medium text-gray-700"
               >
                 Notes:
               </label>
-              <div className='mt-1 block w-full rounded-md border-gray-300 shadow-sm px-3 py-2 bg-gray-100 prose'>
+              <div className="prose mt-1 block w-full rounded-md border-gray-300 bg-gray-100 px-3 py-2 shadow-sm">
                 <ul>
                   {props.notes.map((note) => (
-                    <li
-                      key={note.time.toISOString()}
-                      className='mb-2'
-                    >
-                      <span className='font-semibold'>{dayjs(note.time).format('hh:mm A')}</span>{' '}
+                    <li key={note.time.toISOString()} className="mb-2">
+                      <span className="font-semibold">
+                        {dayjs(note.time).format('hh:mm A')}
+                      </span>{' '}
                       {note.note}
                     </li>
                   ))}
@@ -117,38 +120,52 @@ export function HeadacheJournalEntry(props: JournalEntry) {
               </div>
             </div>
             <div>
-              <label className='block text-sm font-medium text-gray-700'>
+              <label className="block text-sm font-medium text-gray-700">
                 Risk Factors and Triggers:
               </label>
-              <div className='mt-1 border-t pt-2'>
-                {Object.entries(props.riskFactors).map(([category, factors]) => (
-                  <div
-                    key={category}
-                    className='flex items-center justify-between mb-2 border-b  pb-2'
-                  >
-                    <span className='text-sm capitalize'>{category}</span>
-                    <div className='flex space-x-2'>
-                      <Button
-                        variant={factors.toLocaleLowerCase() === 'low' ? 'default' : 'outline'}
-                        className='text-xs'
-                      >
-                        Low
-                      </Button>
-                      <Button
-                        variant={factors.toLocaleLowerCase() === 'med' ? 'default' : 'outline'}
-                        className='text-xs'
-                      >
-                        Med
-                      </Button>
-                      <Button
-                        variant={factors.toLocaleLowerCase() === 'high' ? 'default' : 'outline'}
-                        className='text-xs'
-                      >
-                        High
-                      </Button>
+              <div className="mt-1 border-t pt-2">
+                {Object.entries(props.riskFactors).map(
+                  ([category, factors]) => (
+                    <div
+                      key={category}
+                      className="mb-2 flex items-center justify-between border-b pb-2"
+                    >
+                      <span className="text-sm capitalize">{category}</span>
+                      <div className="flex space-x-2">
+                        <Button
+                          variant={
+                            factors.toLocaleLowerCase() === 'low'
+                              ? 'default'
+                              : 'outline'
+                          }
+                          className="text-xs"
+                        >
+                          Low
+                        </Button>
+                        <Button
+                          variant={
+                            factors.toLocaleLowerCase() === 'med'
+                              ? 'default'
+                              : 'outline'
+                          }
+                          className="text-xs"
+                        >
+                          Med
+                        </Button>
+                        <Button
+                          variant={
+                            factors.toLocaleLowerCase() === 'high'
+                              ? 'default'
+                              : 'outline'
+                          }
+                          className="text-xs"
+                        >
+                          High
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                )}
               </div>
             </div>
           </div>
@@ -181,7 +198,7 @@ function LineChart(props: {
           min: '06:00:00',
           max: '23:00:00',
         }}
-        xFormat='time:%H'
+        xFormat="time:%H"
         yScale={{
           type: 'linear',
           min: 0,
@@ -213,22 +230,22 @@ function LineChart(props: {
             remedies?: string[];
           };
           return (
-            <div className='p-4 rounded-md border bg-white min-w-44'>
-              <div className='flex items-center justify-between mb-2'>
+            <div className="min-w-44 rounded-md border bg-white p-4">
+              <div className="mb-2 flex items-center justify-between">
                 <span>{dayjs(point.data.x).format('hh:mm A')}</span>
-                <span className='font-bold'>{data.y} / 10</span>
+                <span className="font-bold">{data.y} / 10</span>
               </div>
               <>
                 {data.medications && data.medications?.length > 0 && (
-                  <div className='flex items-center gap-1 text-sm'>
-                    <span className='font-bold'>Medications:</span>
+                  <div className="flex items-center gap-1 text-sm">
+                    <span className="font-bold">Medications:</span>
                     <span>{data.medications?.join(', ')}</span>
                   </div>
                 )}
               </>
               {data.remedies && data.remedies.length > 0 && (
-                <div className='flex items-center gap-1 text-sm'>
-                  <span className='font-bold'>Remedies:</span>
+                <div className="flex items-center gap-1 text-sm">
+                  <span className="font-bold">Remedies:</span>
                   <span>{data.remedies.join(', ')}</span>
                 </div>
               )}
@@ -252,7 +269,7 @@ function LineChart(props: {
             },
           },
         }}
-        role='application'
+        role="application"
       />
     </div>
   );

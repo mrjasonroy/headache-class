@@ -7,7 +7,7 @@ const formID = process.env.FORM_ID;
 async function getFormDefinition({
   auth,
 }: {
-  auth: OAuth2Client
+  auth: OAuth2Client;
 }): Promise<forms_v1.Schema$Form> {
   if (!formID) throw new Error('FORM_ID is not set');
   const googleForms = forms({
