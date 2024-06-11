@@ -24,7 +24,6 @@ export default async function Page({
     to: dates.to,
   });
 
-  console.log(journalEntries);
   if (!journalEntries) {
     return null;
   }
@@ -40,7 +39,7 @@ export default async function Page({
               <HeadacheJournalEntry
                 key={date}
                 painData={journalEntries[date].painData}
-                date={new Date(date)}
+                date={journalEntries[date].date}
                 notes={journalEntries[date].notes}
                 riskFactors={journalEntries[date].riskFactors}
               />

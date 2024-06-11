@@ -10,7 +10,7 @@ export default function Page({
 }) {
   try {
     const dates = parseDateRangeUrlString(params.range);
-    return <Header selectedDates={dates} />;
+    return <Header selectedDates={dates} className="mb-8" />;
   } catch (error) {
     return <div>Error: Invalid Dates</div>;
   }

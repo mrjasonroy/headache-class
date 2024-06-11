@@ -13,7 +13,7 @@ export function HeadacheJournalEntrySkeleton() {
               Day:
             </label>
             <div className="mt-1 block w-full rounded-md border-gray-300 bg-gray-100 px-3 py-2 shadow-sm">
-              <Skeleton />
+              <Skeleton className="h-6 w-12" />
             </div>
           </div>
           <div>
@@ -24,7 +24,7 @@ export function HeadacheJournalEntrySkeleton() {
               Date:
             </label>
             <div className="mt-1 block w-full rounded-md border-gray-300 bg-gray-100 px-3 py-2 shadow-sm">
-              <Skeleton />
+              <Skeleton className="h-6 w-20" />
             </div>
           </div>
         </div>
@@ -69,24 +69,24 @@ export function HeadacheJournalEntrySkeleton() {
                 <tbody className="[&_tr:last-child]:border-0">
                   <tr className="border-b transition-colors hover:bg-gray-100/50 data-[state=selected]:bg-gray-100 dark:hover:bg-gray-800/50 dark:data-[state=selected]:bg-gray-800">
                     <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">
-                      <Skeleton />
+                      <Skeleton className="h-8 w-20" />
                     </td>
                     <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">
-                      <Skeleton />
+                      <Skeleton className="h-8 w-20" />
                     </td>
                     <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">
-                      <Skeleton />
+                      <Skeleton className="h-8 w-20" />
                     </td>
                   </tr>
                   <tr className="border-b transition-colors hover:bg-gray-100/50 data-[state=selected]:bg-gray-100 dark:hover:bg-gray-800/50 dark:data-[state=selected]:bg-gray-800">
                     <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">
-                      <Skeleton />
+                      <Skeleton className="h-8 w-20" />
                     </td>
                     <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">
-                      <Skeleton />
+                      <Skeleton className="h-8 w-20" />
                     </td>
                     <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">
-                      <Skeleton />
+                      <Skeleton className="h-8 w-20" />
                     </td>
                   </tr>
                 </tbody>
@@ -108,7 +108,9 @@ export function HeadacheJournalEntrySkeleton() {
               Notes:
             </label>
             <div className="prose mt-1 block w-full rounded-md border-gray-300 bg-gray-100 px-3 py-2 shadow-sm">
-              <Skeleton />
+              <Skeleton className="mb-2 h-8 w-80 bg-gray-300" />
+              <Skeleton className="mb-2 h-8 w-96 bg-gray-300" />
+              <Skeleton className="h-8bg-gray-300 mb-2 w-96" />
             </div>
           </div>
           <div>
@@ -132,10 +134,12 @@ export function HeadacheJournalEntrySkeleton() {
                   <span className="text-sm capitalize">{factor}</span>
                   <div className="flex space-x-2">
                     {['Low', 'Med', 'High'].map((level) => (
-                      <Skeleton
+                      <div
                         key={level}
                         className="inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md border border-gray-200 bg-white px-4 py-2 text-xs font-medium ring-offset-white transition-colors hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-800 dark:bg-gray-950 dark:ring-offset-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus-visible:ring-gray-300"
-                      />
+                      >
+                        {level}
+                      </div>
                     ))}
                   </div>
                 </div>

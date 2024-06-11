@@ -18,9 +18,11 @@ export default function Layout({
   return (
     <html lang="en" className="bg-white">
       <body className={inter.className}>
-        <div className="min-h-svh bg-white">
+        <div className="flex min-h-svh flex-col bg-white">
           {header}
-          <div className="mx-auto max-w-5xl px-4">{children}</div>
+          <div className="mx-auto flex max-w-5xl grow flex-col px-4">
+            {children}
+          </div>
         </div>
       </body>
     </html>

@@ -5,7 +5,7 @@ import { HeadacheIcon } from '@/components/icons/headache';
 export default function Home() {
   return (
     // Center the title and the icon with large text
-    <div className="fjustify-center flex h-full flex-1 flex-col items-center py-2">
+    <div className="flex h-full grow flex-col items-center justify-center py-2">
       <div className="flex flex-row items-center justify-center">
         <HeadacheIcon className="h-72 w-72 text-red-500" />
         <h1 className="text-6xl font-bold">

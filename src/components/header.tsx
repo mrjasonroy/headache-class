@@ -1,20 +1,30 @@
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
 import { DatePicker } from './date-picker';
 import { HeadacheIcon } from './icons/headache';
 import Link from 'next/link';
+import { cn } from '@/lib/utils';
+import dayjs from 'dayjs';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export function Header({
   selectedDates,
+  className,
 }: {
   selectedDates?: {
     from: Date;
     to?: Date;
   };
+  className?: string;
 }) {
   return (
-    <header className="no-print sticky top-0 z-50 mb-8 gap-2 bg-white shadow-md">
+    <header
+      className={cn(
+        'no-print sticky top-0 z-50 gap-2 bg-white shadow-md',
+        className
+      )}
+    >
       <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 p-4">
         <div className="flex items-center justify-start gap-4">
           <Link href="/">
@@ -30,9 +40,9 @@ export function Header({
                   This is a list of all the headache journal entries for Jason
                   for the dates{' '}
                   <span className="font-semibold italic">
-                    {`${dayjs(selectedDates?.from).format('MMMM D, YYYY')}${
+                    {`${dayjs.tz(selectedDates?.from, 'America/Los_Angeles').format('MMMM D, YYYY')}${
                       (selectedDates?.to &&
-                        ` to ${dayjs.utc(selectedDates?.to).format('MMMM D, YYYY')}`) ||
+                        ` to ${dayjs.tz(selectedDates?.to, 'America/Los_Angeles').format('MMMM D, YYYY')}`) ||
                       ''
                     }`}
                   </span>

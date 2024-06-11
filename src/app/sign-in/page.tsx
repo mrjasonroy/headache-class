@@ -13,7 +13,6 @@ export default async function SignIn({
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  console.log('sign in search params', searchParams);
   const session = await getServerSession(authOptions);
   const cookieStore = cookies();
 

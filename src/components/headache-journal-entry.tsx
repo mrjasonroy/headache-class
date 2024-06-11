@@ -13,17 +13,23 @@ import { ResponsiveLine } from '@nivo/line';
 import { Separator } from './ui/separator';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 dayjs.extend(utc);
+dayjs.extend(timezone);
 import { JournalEntry } from '@/lib/journal-entries';
 import { Card, CardContent, CardHeader } from './ui/card';
 
 export function HeadacheJournalEntry(props: JournalEntry) {
-  const lineChartData = props.painData.map((data) => ({
-    x: dayjs(data.time).format('HH:mm:ss'),
-    y: data.level,
-    medications: data.medications,
-    remedies: data.remedies,
-  }));
+  const lineChartData = props.painData
+    .filter((data) => {
+      return data.level !== null;
+    })
+    .map((data) => ({
+      x: dayjs.tz(data.time, 'America/Los_Angeles').format('HH:mm:ss'),
+      y: data.level!,
+      medications: data.medications,
+      remedies: data.remedies,
+    }));
   return (
     <div className="w-full break-after-page">
       <Card className="w-full">
@@ -37,7 +43,7 @@ export function HeadacheJournalEntry(props: JournalEntry) {
                 Day:
               </label>
               <div className="mt-1 block w-full rounded-md border-gray-300 bg-gray-100 px-3 py-2 shadow-sm">
-                {dayjs.utc(props.date).format('dddd')}
+                {dayjs.tz(props.date, 'America/Los_Angeles').format('dddd')}
               </div>
             </div>
             <div>
@@ -48,7 +54,7 @@ export function HeadacheJournalEntry(props: JournalEntry) {
                 Date:
               </label>
               <div className="mt-1 block w-full rounded-md border-gray-300 bg-gray-100 px-3 py-2 shadow-sm">
-                {dayjs.utc(props.date).format('MMMM D, YYYY')}
+                {dayjs.tz(props.date, 'America/Los_Angeles').format('MMMM D, YYYY')}
               </div>
             </div>
           </div>
@@ -87,7 +93,7 @@ export function HeadacheJournalEntry(props: JournalEntry) {
                     .map((data) => (
                       <TableRow key={data.time.toISOString()}>
                         <TableCell>
-                          {dayjs(data.time).format('hh:mm A')}
+                          {dayjs.tz(data.time, 'America/Los_Angeles').format('hh:mm A')}
                         </TableCell>
                         <TableCell>{data.medications.join(', ')}</TableCell>
                         <TableCell>{data.remedies.join(', ')}</TableCell>
@@ -111,7 +117,7 @@ export function HeadacheJournalEntry(props: JournalEntry) {
                   {props.notes.map((note) => (
                     <li key={note.time.toISOString()} className="mb-2">
                       <span className="font-semibold">
-                        {dayjs(note.time).format('hh:mm A')}
+                        {dayjs.tz(note.time, 'America/Los_Angeles').format('hh:mm A')}
                       </span>{' '}
                       {note.note}
                     </li>
