@@ -16,7 +16,6 @@ async function getFormResponses({
     version: 'v1',
     auth: auth,
   });
-  console.log('from', from);
   const res = await googleForms.forms.responses.list({
     formId: formID,
     filter: from ? `timestamp >= ${from.toISOString()}` : undefined,
