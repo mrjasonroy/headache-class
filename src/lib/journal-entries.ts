@@ -21,6 +21,12 @@ export type JournalEntry = {
     medications: string[];
     remedies: string[];
   }[];
+  lineChartData: {
+    x: string;
+    y: number;
+    medications: string[];
+    remedies: string[];
+  }[];
   notes: {
     time: Date;
     note: string;
@@ -67,11 +73,11 @@ export async function getJournalEntries({
 
     const date = dateTime.format('YYYY-MM-DD');
 
-
     if (!journalEntries[date]) {
       journalEntries[date] = {
         date: dateTime.startOf('day').toDate(),
         painData: [],
+        lineChartData: [],
         notes: [],
         riskFactors: {},
       };
@@ -137,6 +143,37 @@ export async function getJournalEntries({
       });
     }
   });
+  // fill out lineChartData
+
+  Object.keys(journalEntries).forEach((date) => {
+    const entry = journalEntries[date];
+
+    entry.painData
+      .filter((data) => {
+        return data.level !== null;
+      })
+      .forEach((data) => {
+        const existingData = entry.lineChartData.find((d) => {
+          const existingHour = d.x.split(':')[0];
+          const currentHour = dayjs.tz(data.time, 'America/Los_Angeles')
+            .format('HH');
+          return existingHour === currentHour;
+        });
+        if (existingData && existingData.y !== null) {
+          existingData.y = (existingData.y + data.level!) / 2;
+          existingData.medications.push(...data.medications);
+          existingData.remedies.push(...data.remedies);
+        } else {
+          entry.lineChartData.push({
+            x: dayjs.tz(data.time, 'America/Los_Angeles').format('HH:mm:ss'),
+            y: data.level!,
+            medications: data.medications,
+            remedies: data.remedies,
+          });
+        }
+      });
+
+  });
 
   // Sort journal entries by date
   const sortedJournalEntries = Object.fromEntries(
@@ -144,20 +181,20 @@ export async function getJournalEntries({
       return dayjs(a).isBefore(dayjs(b)) ? 1 : -1;
     })
   );
+  
 
-  // Sort the pain data by time
   Object.keys(sortedJournalEntries).forEach((date) => {
     sortedJournalEntries[date].painData.sort((a, b) => {
       return dayjs(a.time).isBefore(dayjs(b.time)) ? -1 : 1;
     });
-  });
-
-  // Sort notes by time
-  Object.keys(sortedJournalEntries).forEach((date) => {
+    sortedJournalEntries[date].lineChartData.sort((a, b) => {
+      return Number(a.x.split(':')[0]) < Number(b.x.split(':')[0]) ? -1 : 1;
+    });
     sortedJournalEntries[date].notes.sort((a, b) => {
       return dayjs(a.time).isBefore(dayjs(b.time)) ? -1 : 1;
     });
   });
+
 
   // Filter out entries based on date range in PST
   if (to) {

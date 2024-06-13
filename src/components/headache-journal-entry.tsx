@@ -20,16 +20,6 @@ import { JournalEntry } from '@/lib/journal-entries';
 import { Card, CardContent, CardHeader } from './ui/card';
 
 export function HeadacheJournalEntry(props: JournalEntry) {
-  const lineChartData = props.painData
-    .filter((data) => {
-      return data.level !== null;
-    })
-    .map((data) => ({
-      x: dayjs.tz(data.time, 'America/Los_Angeles').format('HH:mm:ss'),
-      y: data.level!,
-      medications: data.medications,
-      remedies: data.remedies,
-    }));
   return (
     <div className="w-full break-after-page">
       <Card className="w-full">
@@ -66,7 +56,7 @@ export function HeadacheJournalEntry(props: JournalEntry) {
                 Pain Level
               </h3>
             </div>
-            <LineChart className="h-[300px] w-full" data={lineChartData} />
+            <LineChart className="h-[300px] w-full" data={props.lineChartData} />
           </div>
           <div className="my-4">
             <label

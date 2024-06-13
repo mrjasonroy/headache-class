@@ -42,6 +42,7 @@ export default async function Page({
                 date={journalEntries[date].date}
                 notes={journalEntries[date].notes}
                 riskFactors={journalEntries[date].riskFactors}
+                lineChartData={journalEntries[date].lineChartData}
               />
             </>
           );
